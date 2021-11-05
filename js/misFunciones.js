@@ -17,6 +17,8 @@ function pintarRespuesta(respuesta){
         myTable+="<tr>";
         myTable+="<td>"+respuesta[i].name+"</td>";
         myTable+="<td>"+respuesta[i].description+"</td>";
+        myTable+="<td> <button onclick=' actualizarInformacionCategorias("+respuesta[i].id+")'>Actualizar</button>";
+        myTable+="<td> <button onclick='borrarCategoria("+respuesta[i].id+")'>Borrar</button>";
         myTable+="</tr>";
     }
     myTable+="</table>";
@@ -55,6 +57,55 @@ function guardarInformacionCategorias(){
         });
 
 }
+
+function actualizarInformacionCategorias(idElemento){
+    let myData={
+        id:idElemento,
+        name:$("#Cname").val(),
+        description:$("#Cdescription").val()
+
+    };
+    console.log(myData);
+    let dataToSend=JSON.stringify(myData);
+    $.ajax({
+        url:"http://150.230.91.85:8080/api/Category/update",
+        type:"PUT",
+        data:dataToSend,
+        contentType:"application/JSON",
+        datatype:"JSON",
+        success:function(respuesta){
+            $("#resultado").empty();
+            $("#id").val("");
+            $("#Cname").val("");
+            $("#Cdescription").val("");
+            traerInformacionCategorias();
+            alert("se ha Actualizado correctamente la categoria")
+        }
+    });
+
+}
+
+function borrarCategoria(idElemento){
+    let myData={
+        id:idElemento
+    };
+    let dataToSend=JSON.stringify(myData);
+    $.ajax({
+        url:"http://150.230.91.85:8080/api/Category/"+idElemento,
+        type:"DELETE",
+        data:dataToSend,
+        contentType:"application/JSON",
+        datatype:"JSON",
+        success:function(respuesta){
+            $("#resultado").empty();
+            traerInformacionCategorias();
+            alert("Se ha Eliminado.")
+        }
+    });
+
+}
+
+
 
 ///////////////////Boats//////////////////////////////////////
 function traerInformacionBoats(){
@@ -201,7 +252,6 @@ function pintarRespuestaMensajes(respuesta){
     let myTable="<table>";
     for(i=0;i<respuesta.length;i++){
         myTable+="<tr>";
-        myTable+="<td>"+respuesta[i].id+"</td>";
         myTable+="<td>"+respuesta[i].description+"</td>";
         myTable+="</tr>";
     }
@@ -211,7 +261,6 @@ function pintarRespuestaMensajes(respuesta){
 
 function guardarInformacionMensajes(){
     let var5 = {
-        id:$("#Mid").val(),
         description:$("#Mdescription").val()
         };
       
